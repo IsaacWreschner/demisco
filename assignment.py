@@ -10,8 +10,6 @@ class MarkDownTableGenerator:
         self.columns = columns
         self.matrix = []
         
-        
-
     #public methods
     def generate(self):
         markDown = self.__generateHeader()
@@ -24,14 +22,14 @@ class MarkDownTableGenerator:
         # this class is implemented for this specific project and not
         # for global use, so i don't except a user will insert a wrong ROW parameter
         self.matrix.append(row)
-
-
+        
     # "private" methods
     def __generateHeader(self):
          markDown = self.__generateRow(self.columns) + '\n'
          emptyRow = ['---' for i in range(len(self.columns))]
          markDown+= self.__generateRow(emptyRow) + '\n'
          return markDown
+    
     def __generateRow(self,row):
         markDown = '|'
         for cell in row:
@@ -50,8 +48,6 @@ def MarkDownHeaderGenerator(level,text):
     return markDown
 
 
-
-
 def createScannedFileTable(res):
     markDown = MarkDownHeaderGenerator(1,'Scanned File')
     tableGenerator = MarkDownTableGenerator(['MD-5','SHA-1','SHA-256'])
@@ -67,6 +63,7 @@ def createScannedFileTable(res):
     markDown+= tableGenerator.generate()
     return  markDown 
 
+
 def createResultsTable(res):
     markDown = MarkDownHeaderGenerator(1,'Results')
     tableGenerator = MarkDownTableGenerator(['Total Scans','Positive Scans'])
@@ -80,6 +77,7 @@ def createResultsTable(res):
     markDown+= tableGenerator.generate()
     return  markDown 
 
+
 def createScansTable(res):
     markDown = MarkDownHeaderGenerator(1,'Scans')
     #prevent future potential errors
@@ -91,6 +89,7 @@ def createScansTable(res):
         tableGenerator.addRow(createScansRow(scan))
     markDown+= tableGenerator.generate()
     return  markDown 
+
 
 def createScansRow(scan):
     origin = str(scan[0])
