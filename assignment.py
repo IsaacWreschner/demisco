@@ -1,19 +1,19 @@
 import requests
 
-#global const variables
-API_KEY = 'eb81632be4fea778fef9cca64ee1b4f601191cbd4eb33effdcf184ee7eb437d7'
-URL = 'https://www.virustotal.com/vtapi/v2/file/report'
 
+API_KEY = 'eb81632be4fea778fef9cca64ee1b4f601191cbd4eb33effdcf184ee7eb437d7' #virus total api key
+URL = 'https://www.virustotal.com/vtapi/v2/file/report' #virus total api url
+MAX_HEADER_LEVEL = 6 #max header level for markdown headers
 
 class MarkDownTableGenerator:
-    def __init__(self,columns):
+    def __init__(self,columns): #get a array of columns name
         self.columns = columns
-        self.matrix = []
+        self.rows = []
         
     #public methods
     def generate(self):
         markDown = self.__generateHeader()
-        for row in self.matrix:
+        for row in self.rows:
             markDown+=self.__generateRow(row)
             markDown+= '\n'
         return markDown
@@ -21,7 +21,7 @@ class MarkDownTableGenerator:
     def addRow(self,row):
         # this class is implemented for this specific project and not
         # for global use, so i don't except a user will insert a wrong ROW parameter
-        self.matrix.append(row)
+        self.rows.append(row)
         
     # "private" methods
     def __generateHeader(self):
@@ -39,7 +39,7 @@ class MarkDownTableGenerator:
 
 
 def MarkDownHeaderGenerator(level,text):
-    if level > 6:
+    if level > MAX_HEADER_LEVEL:
         return ''
     markDown = ''
     for i in range(level):
@@ -110,11 +110,15 @@ def main(resource):
     if(response.status_code is not 200):
         return '# no data \n virus total responded with a '+ str(response.status_code)+' status code.'
     #if status code is 200
-    res = response.json()
-    markDown = createScannedFileTable(res)
-    markDown+=createResultsTable(res)
-    markDown+=createScansTable(res)
+    try:
+       json = response.json()
+    except:
+        return '# error \n an error occurred during the request'
+
+    markDown = createScannedFileTable(json)
+    markDown+=createResultsTable(json)
+    markDown+=createScansTable(json)
     return markDown
 
 
-
+print (main('84c82835a5d21bbcf75a61706d8ab549'))
